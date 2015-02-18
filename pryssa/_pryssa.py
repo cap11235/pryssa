@@ -21,8 +21,9 @@ class PryssaTracer:
                 print('pryssa: trying to load from {}'.format(self.pryssa_file))
                 with open(self.pryssa_file, 'rb') as f:
                     res = pickle.load(f)
+                    l = frame.f_locals
                     for k, v in res.items():
-                        frame.f_locals[k] = v
+                        l[k] = v
                     self.hit_end = True
                     self.jump_to_end(frame)
             except (OSError, EOFError):
@@ -32,7 +33,7 @@ class PryssaTracer:
             d = {}
             for v in self.vars:
                 d[v] = frame.f_locals[v]
-            print('pryssa: saving')
+            print('pryssa: saving {}'.format(self.vars))
             with open(self.pryssa_file, 'wb') as f:
                 pickle.dump(d, f)
     
